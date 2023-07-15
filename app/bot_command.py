@@ -19,8 +19,7 @@ def send_welcome(message):
     bot.send_message(message.chat.id, START_MESSAGE)
     user_id = message.chat.id
     
-    if str(user_id) == '611845316':
-        send_menu_message(message)
+    send_menu_message(message)
     
 @bot.message_handler(commands=['menu'])
 def send_menu_message(message):
@@ -49,10 +48,8 @@ def send_spbpu_parse(message):
     markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
     callback_data='menu'))
     
-    data_parse = get_data_spbpu_parse()
-    
     bot.send_message(message.chat.id,
-                    generate_spbpu_message(data_parse),
+                    IN_DEVELOPMENT,
                     reply_markup=markup,
                     parse_mode="Markdown")
     
@@ -62,7 +59,14 @@ def send_spbgut_parse(message):
     """
     Парсинг данных с сайта СПбГУТ
     """
-    ...
+    markup = telebot.types.InlineKeyboardMarkup()
+    markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
+    callback_data='menu'))
+    
+    bot.send_message(message.chat.id,
+                    IN_DEVELOPMENT,
+                    reply_markup=markup,
+                    parse_mode="Markdown")
 
 
 @bot.message_handler(commands=['mirea'])
@@ -70,7 +74,22 @@ def send_mirea_parse(message):
     """
     Парсинг данных с сайта МИРЭА
     """
-    ...
+    markup = telebot.types.InlineKeyboardMarkup()
+    markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
+    callback_data='menu'))
+    
+    bot.send_message(message.chat.id,
+                     '_Ожидайте пожалуйста..._',
+                     parse_mode='Markdown',)
+    
+    data_parse = get_data_mirea_parse()
+    
+    mirea_message = generate_mirea_message(data_parse)
+    
+    bot.send_message(message.chat.id,
+                    mirea_message,
+                    parse_mode='Markdown',
+                    reply_markup=markup)
 
 
 @bot.message_handler(commands=['urfu'])
@@ -101,7 +120,14 @@ def send_agtu_parse(message):
     """
     Парсинг данных с сайта АГТУ
     """
-    ...
+    markup = telebot.types.InlineKeyboardMarkup()
+    markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
+    callback_data='menu'))
+    
+    bot.send_message(message.chat.id,
+                    IN_DEVELOPMENT,
+                    reply_markup=markup,
+                    parse_mode="Markdown")
 
 
 @bot.callback_query_handler(func=lambda call: True)

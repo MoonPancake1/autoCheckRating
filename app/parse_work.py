@@ -2,13 +2,7 @@
 Check my rating to HSU - модуль для парсинга данных с сайтов
 ВУЗов
 """
-import time 
-import requests
-from bs4 import BeautifulSoup
-
-from fake_useragent import UserAgent
-
-ua = UserAgent()
+import time
 
 
 def get_data_spbpu_parse(debug=False):
@@ -40,7 +34,39 @@ def get_data_mirea_parse(debug=False):
     Функция парсит данные с сайта МИРЭА и возвращает
     массив данных со специальностями и местами
     """
-    ...
+    logger.debug(f"Пользователь начал парсинг мест с сайта mirea.ru")
+    
+    initial_data = get_full_data_mirea_for_parse()
+    
+    threads = [ SpecMirea(
+        name=spec,
+        url=initial_data[spec]['url_parse'],
+        priority=initial_data[spec]['priority'],
+        rating=initial_data[spec]['rating'],
+        total_budget_position=initial_data[spec]['total_budget_position'],
+        passing_points=initial_data[spec]['passing_points']
+    ) for spec in initial_data]
+    
+    data_req = []
+    
+    logger.debug(f"Парсинг в процессе!")
+    
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    
+    for thread in threads:
+        data_req.append((
+            thread.priority,
+            thread.rating,
+            thread.name,
+            thread.total_budget_position
+        ))
+    
+    logger.info(f"Парсинг сайта mirea.ru прошёл успешно!")
+    
+    return data_req
 
 
 def get_data_urfu_parse(debug=False) -> dict:
@@ -48,105 +74,88 @@ def get_data_urfu_parse(debug=False) -> dict:
     Функция парсит данные с сайта УРФУ и возвращает
     массив данных со специальностями и местами
     """
-    snils = '15832352164'
-    data_nap = {
-        '636': {
-            'url_get_data': f'https://urfu.ru/api/ratings/info/50/636',
-            'url_done': '',
-            'upd': '',
-            'rtext': '',
-            'name_institute': 'Институт новых материалов и технологий',
-            'data_rating': {
-                '09.03.02 Информационные системы и технологии': {
-                    'rating': 0,
-                    'priority': 4,
-                },
-            }
-        },
-        '642': {
-            'url_get_data': f'https://urfu.ru/api/ratings/info/50/642',
-            'url_done': '',
-            'upd': '',
-            'rtext': '',
-            'name_institute': 'Институт радиоэлектроники и информационных технологий - РтФ',
-            'data_rating': {
-                '09.03.01 Информатика и вычислительная техника': {
-                    'rating': 0,
-                    'priority': 3,
-                },
-                '09.03.03 Прикладная информатика': {
-                    'rating': 0,
-                    'priority': 6,
-                },
-                '09.03.04 Программная инженерия': {
-                    'rating': 0,
-                    'priority': 1,
-                },
-            }
-        },
-        '648': {
-            'url_get_data': f'https://urfu.ru/api/ratings/info/50/648',
-            'url_done': '',
-            'upd': '',
-            'rtext': '',
-            'name_institute': 'Институт экономики и управления',
-            'data_rating': {
-                '38.03.05 Бизнес-информатика': {
-                    'rating': 0,
-                    'priority': 2,
-                },
-            }
-        },
-        '644': {
-            'url_get_data': f'https://urfu.ru/api/ratings/info/50/644',
-            'url_done': '',
-            'upd': '',
-            'rtext': '',
-            'name_institute': 'Физико-технологический институт',
-            'data_rating': {
-                '09.03.02 Информационные системы и технологии': {
-                    'rating': 0,
-                    'priority': 5,
-                },
-            }
-        },
-    }
     
-    # Получаем готовые ссылки и ответ в виде html разметки
-    for inst in data_nap:
-        response = requests.get(
-            url=data_nap[inst]['url_get_data'],
-            headers={'user-agent': f'{ua.random}'}
-        ).json()
-        data_nap[inst]['url_done'] = f'https://urfu.ru{response["url"]}'
-        data_nap[inst]['upd'] = response["updatedAt"]
-        response = requests.get(
-            url=data_nap[inst]['url_done'],
-            headers={'user-agent': f'{ua.random}'}
-        )
-        response.encoding = 'utf-8'
-        data_nap[inst]['rtext'] = response.text
+    logger.debug(f"Пользователь начал парсинг мест с сайта urfu.ru")
+
+    initial_data = [
+        ('https://urfu.ru/api/ratings/info/50/636',
+         636, 'Институт новых материалов и технологий',
+         {
+            '09.03.02 Информационные системы и технологии': {
+                'rating': 0,
+                'priority': 4,
+                'budget_places': 29,
+            },
+         }),
+        ('https://urfu.ru/api/ratings/info/50/642',
+         642, 'Институт радиоэлектроники и информационных технологий - РтФ',
+         {
+            '09.03.01 Информатика и вычислительная техника': {
+                'rating': 0,
+                'priority': 3,
+                'budget_places': 78,
+            },
+            '09.03.03 Прикладная информатика': {
+                'rating': 0,
+                'priority': 6,
+                'budget_places': 140,
+            },
+            '09.03.04 Программная инженерия': {
+                'rating': 0,
+                'priority': 1,
+                'budget_places': 161,
+            }, 
+         }),
+        ('https://urfu.ru/api/ratings/info/50/648',
+         648, 'Институт экономики и управления',
+         {
+            '38.03.05 Бизнес-информатика': {
+                'rating': 0,
+                'priority': 2,
+                'budget_places': 14,
+            },
+         }),
+        ('https://urfu.ru/api/ratings/info/50/644',
+         644, 'Физико-технологический институт',
+         {
+            '09.03.02 Информационные системы и технологии': {
+                'rating': 0,
+                'priority': 5,
+                'budget_places': 34,
+            },
+         }),
+    ]
     
-    # Парсим html разметку с помощью bs4
-    for inst in data_nap:
-        soup = BeautifulSoup(data_nap[inst]['rtext'], 'html.parser')
-        abits_all = soup.find_all('tr', class_='tr-odd') + \
-            soup.find_all('tr', class_='tr-even')
-        for abit in abits_all:
-            abit_temp_data = []
-            for elem in abit.descendants:
-                if elem.name is not None:
-                    abit_temp_data.append(elem.text)
-            try:
-                if abit_temp_data[1] == snils:
-                    for spec in data_nap[inst]['data_rating']:
-                        if int(data_nap[inst]['data_rating'][spec]['priority']) \
-                            == int(abit_temp_data[3]):
-                                data_nap[inst]['data_rating'][spec]['rating'] = int(abit_temp_data[0])
-            except Exception as e:
-                print(e)
+    logger.debug(f"Подготовка к парсингу...")
     
-    return data_nap
+    threads = [ SpecUrfu(
+        url=data[0],
+        number_spec=data[1],
+        name_institute=data[2],
+        data_rating=data[3]
+    )  for data in initial_data ]
+    
+    data_req = []
+    
+    logger.debug(f"Парсинг в процессе!")
+    
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    
+    for thread in threads:
+        for spec in thread.data_rating:
+            data_req.append((
+                thread.data_rating[spec]['priority'],
+                thread.data_rating[spec]['rating'],
+                spec,
+                thread.data_rating[spec]['budget_places']
+            ))
+    
+    logger.info(f"Парсинг сайта urfu.ru прошёл успешно!")
+    
+    return data_req
 
 
 def get_data_agtu_parse(debug=False):
@@ -158,6 +167,12 @@ def get_data_agtu_parse(debug=False):
     
 
 if __name__ == '__main__':
+    from parse_site.urfu_parse import *
+    from parse_site.mirea_parse import *
+    
     st = time.time()
-    get_data_urfu_parse()
+    get_data_mirea_parse()
     print(f'Секунд: {round(time.time() - st, 2)}')
+else:
+    from app.parse_site.urfu_parse import *
+    from app.parse_site.mirea_parse import *
