@@ -1,0 +1,12 @@
+services:
+  bot:
+    logging:
+      options:
+        max-size: 10mb
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - TG_API_TOKEN=${TELEGRAM_TOKEN}
+      - SNILS=${SNILS}
+    restart: always
