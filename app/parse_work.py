@@ -11,12 +11,38 @@ def get_data_spbpu_parse(debug=False):
     массив данных со специальностями и местами
     """
     
-    url = 'https://enroll.spbstu.ru/applicants/bachelor-specialist/rating'
+    logger.debug(f"Пользователь начал парсинг мест с сайта enroll.spbstu.ru")
     
-    if not debug:
-        data_req = []
-    else:
-        data_req = [('ПМИ', 1000), ('МАиКН', 250), ('Инноватика', 300)]
+    initial_data = get_full_data_spbpu_for_parse()
+    
+    threads = [ SpecSPbPU(
+        name=spec,
+        url=initial_data[spec]['url_parse'],
+        priority=initial_data[spec]['priority'],
+        rating=initial_data[spec]['rating'],
+        total_budget_position=initial_data[spec]['total_budget_position'],
+        passing_points=initial_data[spec]['passing_points']
+    ) for spec in initial_data]
+    
+    data_req = []
+    
+    logger.debug(f"Парсинг в процессе!")
+    
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    
+    for thread in threads:
+        data_req.append((
+            thread.priority,
+            thread.rating,
+            thread.name,
+            thread.total_budget_position,
+            thread.passing_points,
+        ))
+    
+    logger.info(f"Парсинг сайта enroll.spbstu.ru прошёл успешно!")
     
     return data_req
 
@@ -61,7 +87,8 @@ def get_data_mirea_parse(debug=False):
             thread.priority,
             thread.rating,
             thread.name,
-            thread.total_budget_position
+            thread.total_budget_position,
+            thread.passing_points,
         ))
     
     logger.info(f"Парсинг сайта mirea.ru прошёл успешно!")
@@ -169,6 +196,7 @@ def get_data_agtu_parse(debug=False):
 if __name__ == '__main__':
     from parse_site.urfu_parse import *
     from parse_site.mirea_parse import *
+    from parse_site.spbpu_parse import *
     
     st = time.time()
     get_data_mirea_parse()
@@ -176,3 +204,4 @@ if __name__ == '__main__':
 else:
     from app.parse_site.urfu_parse import *
     from app.parse_site.mirea_parse import *
+    from app.parse_site.spbpu_parse import *

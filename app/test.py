@@ -72,28 +72,46 @@
 # print(f'Threading: {time.time() - start : .2f} seconds')
 
 import requests
+import json
 from bs4 import BeautifulSoup
 
 from fake_useragent import UserAgent
 
 ua = UserAgent()
 
-url = 'https://priem.mirea.ru/accepted-entrants-list/personal_code_rating.php?competition=1748205436693126454'
+# url = 'https://enroll.spbstu.ru/applications-manager/api/v1/admission-list/form-rating?applicationEducationLevel=BACHELOR&directionEducationFormId=2&directionId=569'
 
-response = requests.get(
-    url=url,
-    headers={'user-agent': f'{ua.random}'}
-)
-response.encoding = 'utf-8'
-soup = BeautifulSoup(response.text, 'html.parser')
+# response = requests.get(
+#     url=url,
+#     headers={'user-agent': f'{ua.random}'}
+# ).json()
+
+# with open('app/test.json', 'w+', encoding='utf8') as json_file:
+#     json.dump(response, 
+#               json_file, 
+#               ensure_ascii=False,
+#               indent=2,
+#               separators=(',', ': '))
+
+with open('app/test.json', 'r+', encoding='utf8') as json_file:
+    response = json.load(json_file)
+
+total_budget_position = response['directionCapacity']
+
+for ind, abit in enumerate(response['list']):
+    if abit['userSnils'] == '158-323-521 64':
+        print(abit)
+        print(ind + 2)
+
+# soup = BeautifulSoup(response.text, 'html.parser')
 # with open('test.html', 'w') as f:
 #     f.write(soup.prettify())
-snils = '158-323-521-64'
-passing_points = soup.find_all('p')[1].text.split()[-1]
-target_abit = soup.find('tr', id='1771028852693276311')
+# snils = '158-323-521-64'
+# passing_points = soup.find_all('p')[1].text.split()[-1]
+# target_abit = soup.find('tr', id='1771028852693276311')
 
-print(passing_points)
-[print(data) for data in target_abit.find_all('td')]
+# print(passing_points)
+# [print(data) for data in target_abit.find_all('td')]
 
 # for abit in abits_all:
 #     abit_temp_data = []

@@ -22,16 +22,24 @@ FAILED_REQ_MESSAGE = """
 К сожелению, вам недоступен функционал данного бота, т.к. он создан для этого человека: @p1n0k10
 """
 
-def generate_spbpu_message(data_parse: list = [('test', 281), ('test2', 190)]):
-    spbpu_message = '\n'.join([f"{i[0]}: {i[1]} место" for i in data_parse])
-    return spbpu_message
+def generate_spbpu_message(data_parse: list):
+    temp_answ = sorted(data_parse, key=lambda x: x[0])
+    
+    temp_answ = [f"*{data[0]}.* {data[2]}: *{data[1]}* место \n_Всего_ *{data[3]}* _мест_. Проходной балл: *{data[4]}*" \
+        + ' 😎' if int(data[4]) < 242 else ' 😡'
+                 for data in temp_answ]
+
+    mirea_message = '\n\n'.join(temp_answ)
+                
+    return mirea_message
 
 
 def generate_mirea_message(data_parse: list) -> str:
     
     temp_answ = sorted(data_parse, key=lambda x: x[0])
     
-    temp_answ = [f"*{data[0]}.* {data[2]}: _{data[1]}_ место (_Всего_ *{data[3]}* _мест_)🔥" 
+    temp_answ = [f"*{data[0]}.* {data[2]}: *{data[1]}* место \n_Всего_ *{data[3]}* _мест_. Проходной балл: *{data[4]}*" \
+        + ' 😎' if int(data[4]) < 242 else ' 😡' 
                  for data in temp_answ]
 
     mirea_message = '\n\n'.join(temp_answ)
@@ -43,7 +51,7 @@ def generate_urfu_message(data_parse: list) -> str:
     
     temp_answ = sorted(data_parse, key=lambda x: x[0])
     
-    temp_answ = [f"*{data[0]}.* {data[2]}: _{data[1]}_ место (_Всего_ *{data[3]}* _мест_)🔥" 
+    temp_answ = [f"*{data[0]}.* {data[2]}: *{data[1]}* место (_Всего_ *{data[3]}* _мест_)🔥" 
                  for data in temp_answ]
 
     urfu_message = '\n\n'.join(temp_answ)

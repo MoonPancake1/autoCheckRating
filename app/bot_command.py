@@ -57,11 +57,22 @@ def send_spbpu_parse(message):
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
         callback_data='menu'))
-
+        
         bot.send_message(message.chat.id,
-                        IN_DEVELOPMENT,
-                        reply_markup=markup,
-                        parse_mode="Markdown")
+                        """
+                        Вы начали парсить данные с сайта *СПбПУ* 🥶 
+_Ожидайте, пожалуйста..._
+                        """,
+                        parse_mode='Markdown',)
+    
+        data_parse = get_data_spbpu_parse()
+        
+        spbpu_message = generate_spbpu_message(data_parse)
+        
+        bot.send_message(message.chat.id,
+                        spbpu_message,
+                        parse_mode='Markdown',
+                        reply_markup=markup)
     else:
         bot.send_message(message.chat.id, FAILED_REQ_MESSAGE,
                         parse_mode='Markdown')
@@ -99,7 +110,10 @@ def send_mirea_parse(message):
         callback_data='menu'))
         
         bot.send_message(message.chat.id,
-                        '_Ожидайте, пожалуйста..._',
+                        """
+                        Вы начали парсить данные с сайта *МИРЭА* ⚡️ 
+_Ожидайте, пожалуйста..._
+                        """,
                         parse_mode='Markdown',)
     
         data_parse = get_data_mirea_parse()
@@ -127,7 +141,10 @@ def send_urfu_parse(message):
         callback_data='menu'))
         
         bot.send_message(message.chat.id,
-                        '_Ожидайте, пожалуйста..._',
+                        """
+                        Вы начали парсить данные с сайта *УРФУ* ⛰️  
+_Ожидайте, пожалуйста..._
+                        """,
                         parse_mode='Markdown',)
         
         data_parse = get_data_urfu_parse()
