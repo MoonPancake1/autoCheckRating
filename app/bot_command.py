@@ -99,7 +99,7 @@ def send_mirea_parse(message):
         callback_data='menu'))
         
         bot.send_message(message.chat.id,
-                        '_Ожидайте пожалуйста..._',
+                        '_Ожидайте, пожалуйста..._',
                         parse_mode='Markdown',)
     
         data_parse = get_data_mirea_parse()
@@ -127,7 +127,7 @@ def send_urfu_parse(message):
         callback_data='menu'))
         
         bot.send_message(message.chat.id,
-                        '_Ожидайте пожалуйста..._',
+                        '_Ожидайте, пожалуйста..._',
                         parse_mode='Markdown',)
         
         data_parse = get_data_urfu_parse()
