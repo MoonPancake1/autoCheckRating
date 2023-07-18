@@ -17,7 +17,7 @@ bot = telebot.TeleBot(os.getenv('TELEGRAM_TOKEN'))
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     user_id = message.chat.id
-    if user_id in TRUE_IDS:
+    if str(user_id) in TRUE_IDS:
         bot.send_message(message.chat.id, START_MESSAGE)
         send_menu_message(message)
     else:
@@ -27,7 +27,7 @@ def send_welcome(message):
 @bot.message_handler(commands=['menu'])
 def send_menu_message(message):
     user_id = message.chat.id
-    if user_id in TRUE_IDS:
+    if str(user_id) in TRUE_IDS:
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='СПбПУ 🥶', 
         callback_data='spbpu'))
@@ -53,7 +53,7 @@ def send_spbpu_parse(message):
     Парсинг данных с сайта СПбПУ
     """
     user_id = message.chat.id
-    if user_id in TRUE_IDS:
+    if str(user_id) in TRUE_IDS:
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
         callback_data='menu'))
@@ -73,7 +73,7 @@ def send_spbgut_parse(message):
     Парсинг данных с сайта СПбГУТ
     """
     user_id = message.chat.id
-    if user_id in TRUE_IDS:
+    if str(user_id) in TRUE_IDS:
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
         callback_data='menu'))
@@ -93,7 +93,7 @@ def send_mirea_parse(message):
     Парсинг данных с сайта МИРЭА
     """
     user_id = message.chat.id
-    if user_id in TRUE_IDS:
+    if str(user_id) in TRUE_IDS:
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
         callback_data='menu'))
@@ -121,7 +121,7 @@ def send_urfu_parse(message):
     Парсинг данных с сайта УРФУ
     """
     user_id = message.chat.id
-    if user_id in TRUE_IDS:
+    if str(user_id) in TRUE_IDS:
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
         callback_data='menu'))
@@ -149,7 +149,7 @@ def send_agtu_parse(message):
     Парсинг данных с сайта АГТУ
     """
     user_id = message.chat.id
-    if user_id in TRUE_IDS:
+    if str(user_id) in TRUE_IDS:
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='К ВУЗам', 
         callback_data='menu'))
