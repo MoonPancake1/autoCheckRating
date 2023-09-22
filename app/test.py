@@ -99,7 +99,7 @@ with open('app/test.json', 'r+', encoding='utf8') as json_file:
 total_budget_position = response['directionCapacity']
 
 for ind, abit in enumerate(response['list']):
-    if abit['userSnils'] == '158-323-521 64':
+    if abit['userSnils'] == 'SNILS':
         print(abit)
         print(ind + 2)
 
