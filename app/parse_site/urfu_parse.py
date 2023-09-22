@@ -25,7 +25,7 @@ class SpecUrfu(threading.Thread):
         self.rtext = ''
         self.name_institute = name_institute
         self.data_rating = data_rating
-        self.snils = '15832352164'
+        self.snils = ''
     
     
     def run(self) -> None:
