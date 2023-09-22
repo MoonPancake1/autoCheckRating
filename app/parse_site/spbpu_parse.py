@@ -29,7 +29,7 @@ class SpecSPbPU(threading.Thread):
         self.total_budget_position = total_budget_position
         self.passing_points = passing_points
         self.rjson = {}
-        self.snils = '158-323-521 64'
+        self.snils = ''
     
     def run(self) -> None:
         """
@@ -68,7 +68,7 @@ class SpecSPbPU(threading.Thread):
         abits_has_Original = []
         
         for ind, abit in enumerate(self.rjson['list']):
-            if abit['userSnils'] == '158-323-521 64':
+            if abit['userSnils'] == '':
                 self.rating = ind + 2
             if abit['hasOriginalDocuments'] and \
                 (len(abits_has_Original) < \
