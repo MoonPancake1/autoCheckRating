@@ -29,7 +29,7 @@ class SpecMirea(threading.Thread):
         self.total_budget_position = total_budget_position
         self.passing_points = passing_points
         self.rtext = ''
-        self.snils = '158-323-521-64'
+        self.snils = ''
     
     
     def run(self) -> None:
