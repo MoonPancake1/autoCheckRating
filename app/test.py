@@ -18,7 +18,7 @@
 # soup = BeautifulSoup(response.text, 'html.parser')
 # # with open('test.html', 'w') as f:
 # #     f.write(soup.prettify())
-# snils = '15832352164'
+# snils = ''
 # abits_all = soup.find_all('tr', class_='tr-odd') + \
 #     soup.find_all('tr', class_='tr-even')
 # for abit in abits_all:
@@ -106,7 +106,7 @@ for ind, abit in enumerate(response['list']):
 # soup = BeautifulSoup(response.text, 'html.parser')
 # with open('test.html', 'w') as f:
 #     f.write(soup.prettify())
-# snils = '158-323-521-64'
+# snils = ''
 # passing_points = soup.find_all('p')[1].text.split()[-1]
 # target_abit = soup.find('tr', id='1771028852693276311')
 
